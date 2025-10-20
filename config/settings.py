@@ -37,7 +37,6 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             BASE_DIR / "templates",
-            BASE_DIR,  # allow templates referenced with subfolders like "templest profile/..."
         ],
         "APP_DIRS": True,
         "OPTIONS": {

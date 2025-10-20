@@ -40,7 +40,7 @@ docker build -t django-tailwind-app .
 docker run -p 8000:8000 --env DEBUG=0 django-tailwind-app
 ```
 
-เปิดเว็บ: http://localhost:8000
+เปิดเว็บ: http://localhost:8000 (ตอนนี้หน้าแรกเป็น Profile)
 
 > หมายเหตุ: ใน Production ใช้ Whitenoise เสิร์ฟ static files แล้ว (collectstatic ทำในขั้นตอน build)
 
@@ -51,8 +51,7 @@ docker run -p 8000:8000 --env DEBUG=0 django-tailwind-app
 - หน้าเริ่มต้น: `core/templates/core/index.html`
 
 ## หน้า (Pages)
-- Home: `/` — หน้าเริ่มต้นพร้อมตัวอย่าง Tailwind
-- About: `/about/` — หน้าแนะนำโปรเจ็คดีไซน์สวยด้วย gradient + cards
+- Profile: `/` และ `/profile/` — หน้าโปรไฟล์ (เป็นหน้าแรก)
 
 ## ENV ที่สำคัญ
 - `DEBUG` (ค่าเริ่มต้น: 1) ตั้งเป็น `0` สำหรับ production
@@ -129,7 +128,7 @@ urlpatterns = [
 {% endblock %}
 ```
 
-- เพิ่มลิงก์ในเมนู: `templates/base.html`
+- เพิ่มลิงก์ในเมนู: `templates/base.html` (ถ้าใช้ layout หลักนี้)
 
 ```html
 <a href="{% url 'features' %}" class="px-2 py-1 rounded hover:bg-gray-100 {% with current=request.resolver_match.url_name %}{% if current == 'features' %}text-indigo-600 font-medium{% endif %}{% endwith %}">Features</a>
@@ -188,3 +187,41 @@ docker compose exec tailwind sh -lc "npm run build"
 
 - เปิดเว็บไม่ขึ้น: ตรวจสถานะด้วย `docker compose ps` และ log ของ `web`
 - เปลี่ยนค่าตั้งค่า: ดู `config/settings.py` โดยเฉพาะ `DEBUG`, `ALLOWED_HOSTS`
+
+---
+
+## Discord OAuth (สำรวจและใช้งานได้จริงในโปรเจ็ค)
+
+เราสร้าง endpoints สำหรับเชื่อมต่อ Discord OAuth2 ด้วย scope `identify` เพื่อดึงข้อมูลผู้ใช้
+
+- เริ่มเชื่อมต่อ: `/auth/discord/login/`
+- Callback: `/auth/discord/callback/`
+- ดูข้อมูลผู้ใช้ที่เก็บในเซสชัน: `/auth/discord/me/`
+
+ตั้งค่า ENV (อย่า commit ค่า Secret จริง):
+
+```
+DISCORD_CLIENT_ID=ใส่ค่าของคุณ
+DISCORD_CLIENT_SECRET=ใส่ค่าของคุณ
+DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/
+DISCORD_SCOPE=identify
+```
+
+ใน Dev สามารถตั้งค่าใน Docker Compose แบบชั่วคราว:
+
+```
+docker compose run --rm -e DISCORD_CLIENT_ID=xxx -e DISCORD_CLIENT_SECRET=yyy -e DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/ web python manage.py shell
+```
+
+หรือแก้ `docker-compose.yml` เพิ่ม environment ของ service `web` (ไม่แนะนำใส่ secret ลงในไฟล์ถ้า repo สาธารณะ)
+
+URL Authorize ตัวอย่าง:
+
+```
+https://discord.com/oauth2/authorize?client_id=<CLIENT_ID>&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fdiscord%2Fcallback%2F&scope=identify
+```
+
+โฟลว์:
+1) ผู้ใช้กด `/auth/discord/login/` → Redirect ไป Discord
+2) Discord redirect กลับมาที่ callback พร้อม `code`
+3) เซิร์ฟเวอร์แลก `code` เป็น token และเรียก `/users/@me` ได้ข้อมูลผู้ใช้ → เก็บไว้ในเซสชัน → Redirect ไปหน้าแรก

@@ -27,10 +27,8 @@
 <body class="min-h-screen bg-black text-white relative overflow-hidden">
 
   <!-- วิดีโอพื้นหลัง (ใส่ไฟล์ของคุณที่ static/media/bg-space.mp4 หรือเปลี่ยนชื่อได้) -->
-  <video class="fixed inset-0 w-full h-full object-cover opacity-35 no-pointer" autoplay muted loop playsinline>
-    <source src="{% static 'media/bg-space.mp4' %}" type="video/mp4">
-  </video>
-  <div class="fixed inset-0 bg-black/45 no-pointer"></div>
+  <!-- Video temporarily disabled; using static overlay only to avoid 404 when file missing -->
+  <div class="fixed inset-0 bg-black/65 no-pointer"></div>
 
   <!-- หิมะโปรย -->
   <canvas id="snow" class="fixed inset-0 no-pointer" style="opacity:.9"></canvas>

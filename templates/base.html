@@ -10,15 +10,9 @@
   <body class="min-h-screen bg-gray-50 text-gray-900">
     <header class="border-b bg-white">
       <div class="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
-        <a href="{% url 'home' %}" class="text-xl font-semibold">Django + Tailwind</a>
+        <a href="{% url 'profile' %}" class="text-xl font-semibold">Django + Tailwind</a>
         <nav class="flex items-center gap-4 text-sm">
-          {% load static %}
-          {% with current=request.resolver_match.url_name %}
-            <a href="{% url 'home' %}" class="px-2 py-1 rounded hover:bg-gray-100 {% if current == 'home' %}text-indigo-600 font-medium{% endif %}">Home</a>
-            <a href="{% url 'about' %}" class="px-2 py-1 rounded hover:bg-gray-100 {% if current == 'about' %}text-indigo-600 font-medium{% endif %}">About</a>
-            <a href="{% url 'contact' %}" class="px-2 py-1 rounded hover:bg-gray-100 {% if current == 'contact' %}text-indigo-600 font-medium{% endif %}">Contact</a>
-            <a href="{% url 'profile' %}" class="px-2 py-1 rounded hover:bg-gray-100">Profile</a>
-          {% endwith %}
+          <a href="{% url 'profile' %}" class="px-2 py-1 rounded hover:bg-gray-100">Profile</a>
         </nav>
       </div>
     </header>
