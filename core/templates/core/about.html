@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}About | Django + Tailwind{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-8 text-white shadow-lg">
+  <div class="relative z-10 grid gap-6 sm:grid-cols-2">
+    <div>
+      <span class="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-sm backdrop-blur">
+        New
+      </span>
+      <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">เกี่ยวกับโปรเจ็ค</h2>
+      <p class="mt-3 text-white/90">เทมเพลต Django + Tailwind ที่ตั้งค่า Docker ให้พร้อมใช้งาน เหมาะสำหรับเริ่มต้นโปรเจ็คเว็บของคุณอย่างรวดเร็ว</p>
+      <div class="mt-6 flex gap-3">
+        <a href="/" class="inline-flex items-center rounded-lg bg-white px-4 py-2 font-medium text-indigo-700 shadow hover:bg-white/90">
+          กลับหน้าแรก
+        </a>
+        <a href="https://tailwindcss.com" target="_blank" class="inline-flex items-center rounded-lg border border-white/30 bg-white/10 px-4 py-2 font-medium text-white hover:bg-white/20">
+          เรียนรู้ Tailwind →
+        </a>
+      </div>
+    </div>
+    <div class="relative">
+      <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
+      <div class="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/10 blur-2xl"></div>
+      <div class="relative rounded-xl bg-white/10 p-6 shadow-lg ring-1 ring-white/20">
+        <p class="text-sm text-white/80">Stack</p>
+        <ul class="mt-2 space-y-2 text-white">
+          <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-300"></span>Django 5</li>
+          <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-300"></span>Tailwind CSS 3</li>
+          <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-sky-300"></span>Docker + Compose</li>
+          <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-fuchsia-300"></span>Whitenoise static</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-10 grid gap-6 md:grid-cols-3">
+  <div class="rounded-xl border bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">พร้อมเริ่มเร็ว</h3>
+    <p class="mt-2 text-gray-600">สั่ง `docker compose up --build` แล้วเริ่มพัฒนาได้ทันที มี watcher ของ Tailwind ให้พร้อม</p>
+  </div>
+  <div class="rounded-xl border bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">โครงสร้างง่าย</h3>
+    <p class="mt-2 text-gray-600">เทมเพลตแบ่งส่วนด้วย `base.html` และหน้าเฉพาะใน `core/templates/core/`</p>
+  </div>
+  <div class="rounded-xl border bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">ขยายได้คล่อง</h3>
+    <p class="mt-2 text-gray-600">เสริมแอป, เพิ่ม Static/Media, และปรับ Tailwind ได้ตามต้องการ</p>
+  </div>
+</section>
+
+<section class="mt-10 rounded-xl border bg-white p-6 shadow-sm">
+  <h3 class="text-lg font-semibold">เริ่มปรับแต่ง</h3>
+  <ul class="mt-3 list-disc space-y-1 pl-6 text-gray-700">
+    <li>แก้ไฟล์ `templates/base.html` เพื่อทำ Header/Footer และ Navigation</li>
+    <li>แก้ CSS ที่ `assets/css/input.css` เพื่อเพิ่ม Components/Utilities</li>
+    <li>เพิ่ม Views/URLs ใน `core/views.py` และ `core/urls.py`</li>
+  </ul>
+</section>
+{% endblock %}
+

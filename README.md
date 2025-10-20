@@ -50,6 +50,10 @@ docker run -p 8000:8000 --env DEBUG=0 django-tailwind-app
 - Template หลัก: `templates/base.html`
 - หน้าเริ่มต้น: `core/templates/core/index.html`
 
+## หน้า (Pages)
+- Home: `/` — หน้าเริ่มต้นพร้อมตัวอย่าง Tailwind
+- About: `/about/` — หน้าแนะนำโปรเจ็คดีไซน์สวยด้วย gradient + cards
+
 ## ENV ที่สำคัญ
 - `DEBUG` (ค่าเริ่มต้น: 1) ตั้งเป็น `0` สำหรับ production
 - `SECRET_KEY` ระบุค่าเองใน production
