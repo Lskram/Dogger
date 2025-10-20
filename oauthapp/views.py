@@ -1,7 +1,6 @@
 import os
 from urllib.parse import urlencode
 
-import requests
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 
@@ -39,6 +38,7 @@ def discord_callback(request):
     }
 
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    import requests
     try:
         token_res = requests.post(DISCORD_TOKEN_URL, data=data, headers=headers, timeout=10)
         token_res.raise_for_status()
@@ -56,8 +56,27 @@ def discord_callback(request):
     except Exception as e:
         return HttpResponse(f"Fetch user failed: {e}", status=500)
 
-    request.session["discord_user"] = me_res.json()
+    me_json = me_res.json()
+    request.session["discord_user"] = me_json
     request.session["discord_access_token"] = access_token
+
+    # If this is the owner account, persist tokens for public display without login
+    owner_id = os.getenv("DISCORD_OWNER_ID")
+    if owner_id and str(me_json.get("id")) == str(owner_id):
+        try:
+            from django.utils import timezone
+            from oauthapp.models import OwnerToken
+            expires_in = token_json.get("expires_in") or 3600
+            obj, _ = OwnerToken.objects.get_or_create(owner_id=str(owner_id))
+            obj.access_token = access_token
+            obj.refresh_token = token_json.get("refresh_token", obj.refresh_token)
+            obj.expires_at = timezone.now() + timezone.timedelta(seconds=int(expires_in))
+            obj.scope = token_json.get("scope")
+            obj.token_type = token_json.get("token_type")
+            obj.profile_json = me_json
+            obj.save()
+        except Exception:
+            pass
     return redirect("profile")
 
 

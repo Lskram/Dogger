@@ -30,14 +30,18 @@
   <!-- Video temporarily disabled; using static overlay only to avoid 404 when file missing -->
   <div class="fixed inset-0 bg-black/65 no-pointer"></div>
   <div class="fixed top-4 right-4 z-50">
-    {% if request.session.discord_user %}
-      <div class="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-2 backdrop-blur ring-1 ring-white/20">
-        <span class="text-sm">Hello, {{ request.session.discord_user.username }}</span>
-        <a href="{% url 'discord_logout' %}" class="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-700">Logout</a>
-      </div>
-    {% else %}
-      <a href="{% url 'discord_login' %}" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700">Login with Discord</a>
-    {% endif %}
+    {% with user_ctx=session_user|default:owner_user %}
+      {% if user_ctx %}
+        <div class="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-2 backdrop-blur ring-1 ring-white/20">
+          <span class="text-sm">Hello, {{ user_ctx.global_name|default:user_ctx.username }}</span>
+          {% if session_user %}
+            <a href="{% url 'discord_logout' %}" class="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-700">Logout</a>
+          {% endif %}
+        </div>
+      {% else %}
+        <a href="{% url 'discord_login' %}" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700">Login with Discord</a>
+      {% endif %}
+    {% endwith %}
   </div>
 
   <!-- หิมะโปรย -->
