@@ -198,7 +198,12 @@ docker compose exec tailwind sh -lc "npm run build"
 - Callback: `/auth/discord/callback/`
 - ดูข้อมูลผู้ใช้ที่เก็บในเซสชัน: `/auth/discord/me/`
 
-ตั้งค่า ENV (อย่า commit ค่า Secret จริง):
+ตั้งค่า ENV (อย่า commit ค่า Secret จริง). แนะนำสร้างไฟล์ `.env` จากตัวอย่าง:
+
+```
+cp .env.example .env
+# แล้วแก้ไขค่าในไฟล์ .env ให้ถูกต้อง
+```
 
 ```
 DISCORD_CLIENT_ID=ใส่ค่าของคุณ
@@ -207,13 +212,7 @@ DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/
 DISCORD_SCOPE=identify
 ```
 
-ใน Dev สามารถตั้งค่าใน Docker Compose แบบชั่วคราว:
-
-```
-docker compose run --rm -e DISCORD_CLIENT_ID=xxx -e DISCORD_CLIENT_SECRET=yyy -e DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/ web python manage.py shell
-```
-
-หรือแก้ `docker-compose.yml` เพิ่ม environment ของ service `web` (ไม่แนะนำใส่ secret ลงในไฟล์ถ้า repo สาธารณะ)
+Compose จะอ่านไฟล์ `.env` อัตโนมัติ และเราได้ตั้งค่า `env_file: .env` ไว้แล้วใน service `web`
 
 URL Authorize ตัวอย่าง:
 
@@ -225,3 +224,6 @@ https://discord.com/oauth2/authorize?client_id=<CLIENT_ID>&response_type=code&re
 1) ผู้ใช้กด `/auth/discord/login/` → Redirect ไป Discord
 2) Discord redirect กลับมาที่ callback พร้อม `code`
 3) เซิร์ฟเวอร์แลก `code` เป็น token และเรียก `/users/@me` ได้ข้อมูลผู้ใช้ → เก็บไว้ในเซสชัน → Redirect ไปหน้าแรก
+
+หมายเหตุการ build ถาวร:
+- เมื่อ Docker Hub พร้อม ให้รัน `docker compose up -d --build` เพื่อรวม dependency (requests) เข้าอิมเมจถาวร

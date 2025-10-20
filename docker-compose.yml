@@ -6,8 +6,14 @@ services:
       - .:/app
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
-      - DEBUG=1
+      - DEBUG=${DEBUG:-1}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_REDIRECT_URI=${DISCORD_REDIRECT_URI:-http://localhost:8000/auth/discord/callback/}
+      - DISCORD_SCOPE=${DISCORD_SCOPE:-identify}
   tailwind:
     image: node:20-alpine
     working_dir: /app

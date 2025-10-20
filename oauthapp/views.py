@@ -66,3 +66,7 @@ def discord_me(request):
         return JsonResponse({"detail": "no user"}, status=404)
     return JsonResponse(data)
 
+
+def discord_logout(request):
+    request.session.pop("discord_user", None)
+    return redirect("profile")
