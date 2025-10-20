@@ -246,3 +246,67 @@ https://discord.com/oauth2/authorize?client_id=<CLIENT_ID>&response_type=code&re
 
 หมายเหตุการ build ถาวร:
 - เมื่อ Docker Hub พร้อม ให้รัน `docker compose up -d --build` เพื่อรวม dependency (requests) เข้าอิมเมจถาวร
+
+---
+
+## สรุปงานที่ทำ และสิ่งที่ต้องทำต่อ (Checklist)
+
+สิ่งที่พร้อมใช้งานแล้ว
+- Django + Tailwind + Docker ครบ (Dev/Prod)
+- หน้าแรก (Profile) แสดงรูปโปรไฟล์/ชื่อจาก Discord
+  - ชื่อใช้ `username` (ถ้ามี discriminator และไม่ใช่ "0" จะแสดง `username#1234`)
+  - สถานะออนไลน์: online/idle/dnd/offline (offline จะมีเวลาเป็นภาษาอังกฤษ เช่น `offline (2 hours 5 minutes)`)
+- OAuth Discord (scope `identify`) + Owner token cache (OWNER_ID)
+- Realtime presence (เลือกใช้):
+  - Bot (Gateway) เขียนไฟล์ `runtime/presence.json`
+  - หรือ Server Widget ของกิลด์ (ไม่ realtime เท่า bot)
+- Health endpoint: `/healthz`
+- VS Code tasks + docker-compose สำหรับ Dev
+- CI: GitHub Actions build/push image ไป GHCR
+- Render-ready: มี `render.yaml` (Blueprint) + Dockerfile bind `${PORT}`
+
+สิ่งที่ต้องทำต่อ (เพื่อให้เพื่อนดูได้แบบถาวร)
+1) Deploy บน Render (แนะนำ)
+   - Render → New → Blueprint → เลือก repo นี้ → ใช้ `render.yaml` → Apply
+   - ตั้ง ENV ของ service `dogger-web` (สำคัญ):
+     - `DEBUG=0`
+     - `SECRET_KEY=<สุ่มยาวๆ>`
+     - `ALLOWED_HOSTS=<your-subdomain>.onrender.com`
+     - `CSRF_TRUSTED_ORIGINS=https://<your-subdomain>.onrender.com`
+     - `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`
+     - `DISCORD_REDIRECT_URI=https://<your-subdomain>.onrender.com/auth/discord/callback/`
+     - `DISCORD_SCOPE=identify`
+     - `DISCORD_OWNER_ID=<YourUserID>`
+     - `DISCORD_OWNER_ABOUT=ข้อความแนะนำตัว`
+   - Deploy → ทดสอบ `/healthz` และหน้า `/`
+   - อัปเดต Redirect URI ใน Discord Developer Portal ให้ตรงโดเมนจริง
+
+2) (ตัวเลือก) เปิด Realtime Presence ด้วยบอท
+   - เปิด intents (Presence + Server Members) ใน Discord Developer Portal
+   - เชิญบอทเข้ากิลด์
+   - ตั้ง ENV ของ worker `dogger-bot`:
+     - `DISCORD_BOT_TOKEN`
+     - `DISCORD_PRESENCE_USER_ID=<YourUserID>` (ไม่ใส่จะใช้ OWNER_ID)
+     - `DISCORD_PRESENCE_FILE=runtime/presence.json`
+     - `DISCORD_WIDGET_GUILD_ID=<GuildID>` (ถ้าจะ fallback Widget)
+   - Deploy worker
+
+3) แชร์ทันที (ชั่วคราว) แบบท่อจากเครื่อง
+   - ใช้ ngrok/localtunnel เปิดพอร์ต `8000`
+   - อัปเดต `DISCORD_REDIRECT_URI` ให้ตรง URL ชั่วคราว แล้ว restart `web`
+
+Known issues / Next work
+- Tailwind watcher ใน container บางครั้ง error; แก้ด้วย:
+  - `docker compose stop tailwind && rm -rf node_modules && docker compose run --rm tailwind sh -lc "npm ci && npm run build"`
+- ติดตั้ง `requests` ถาวรใน image: เมื่อ Docker Hub พร้อม ให้ `docker compose up -d --build` (image จะ bake ไลบรารี)
+- Production ENV ต้องตั้งให้ครบ: `SECRET_KEY`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `DISCORD_REDIRECT_URI`
+- บอท Presence: ต้องเปิด intents + เชิญบอท + ถ้ารีสตาร์ทบอท ตัวนับเวลา offline จะเริ่มใหม่ (จำย้อนหลังไม่ได้)
+- Template โปรไฟล์มีสคริปต์/เอฟเฟกต์ยาว อาจพิจารณารีแฟคเตอร์หรือแยก component เพิ่มความอ่านง่าย
+- Favicon ตอนนี้เป็น placeholder → ใส่ของจริงได้ที่ `static/favicon.ico`
+- Security: อย่า commit secrets ลง repo; ถ้า token หลุดให้ rotate ทันที
+
+Quick commands
+- Dev: `docker compose up --build` → เปิด http://localhost:8000
+- Migrate: `docker compose run --rm web python manage.py migrate`
+- Tailwind build: `docker compose exec tailwind sh -lc "npm run build"`
+- Prod local: `IMAGE=ghcr.io/<owner>/<repo>:latest docker compose -f docker-compose.prod.yml up -d`
