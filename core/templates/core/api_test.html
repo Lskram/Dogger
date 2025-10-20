@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}API Test{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold">API Test</h2>
+    <div class="flex gap-2">
+      <a href="?source=public" class="rounded-lg border px-3 py-1.5 hover:bg-gray-50">Public API</a>
+      <a href="?source=discord" class="rounded-lg border px-3 py-1.5 hover:bg-gray-50">Discord API</a>
+      <a href="/auth/discord/login/" class="rounded-lg bg-indigo-600 px-3 py-1.5 text-white hover:bg-indigo-700">Login Discord</a>
+    </div>
+  </div>
+
+  <div class="rounded-xl border bg-white p-4">
+    <dl class="grid grid-cols-2 gap-4 text-sm">
+      <div>
+        <dt class="text-gray-500">Source</dt>
+        <dd class="font-medium">{{ source }}</dd>
+      </div>
+      <div>
+        <dt class="text-gray-500">Status</dt>
+        <dd class="font-medium">{{ status|default:'-' }}</dd>
+      </div>
+    </dl>
+  </div>
+
+  {% if error %}
+  <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+    {{ error }}
+  </div>
+  {% endif %}
+
+  <div class="rounded-xl border bg-white p-0 overflow-hidden">
+    <div class="border-b bg-gray-50 px-4 py-2 text-sm text-gray-600">Response</div>
+    <pre class="p-4 text-sm overflow-auto"><code>{{ json_text|default:'{}' }}</code></pre>
+  </div>
+</div>
+{% endblock %}
+

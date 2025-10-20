@@ -57,6 +57,7 @@ def discord_callback(request):
         return HttpResponse(f"Fetch user failed: {e}", status=500)
 
     request.session["discord_user"] = me_res.json()
+    request.session["discord_access_token"] = access_token
     return redirect("profile")
 
 
