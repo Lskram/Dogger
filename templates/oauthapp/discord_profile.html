@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Discord Profile{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl space-y-6">
+  <div class="rounded-2xl border bg-white shadow-sm overflow-hidden">
+    {% if banner_url %}
+      <div class="h-40 w-full bg-cover bg-center" style="background-image:url('{{ banner_url }}')"></div>
+    {% else %}
+      <div class="h-16 w-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+    {% endif %}
+    <div class="p-6">
+      <div class="flex items-center gap-4">
+        {% if avatar_url %}
+          <img src="{{ avatar_url }}" alt="avatar" class="h-20 w-20 rounded-full ring-2 ring-white -mt-12 bg-white" />
+        {% endif %}
+        <div>
+          <div class="text-2xl font-bold">{{ username }}</div>
+          <div class="text-gray-500 text-sm">ID: {{ id }}</div>
+        </div>
+      </div>
+      <div class="mt-4 grid gap-3 md:grid-cols-2">
+        <div class="rounded-lg border bg-gray-50 p-3 text-sm">
+          <div class="text-gray-600">สถานะออนไลน์</div>
+          <div class="font-medium">ไม่สามารถดึงผ่าน OAuth REST</div>
+          <div class="text-gray-500 mt-1">{{ presence_note }}</div>
+        </div>
+        <div class="rounded-lg border bg-gray-50 p-3 text-sm">
+          <div class="text-gray-600">About me</div>
+          <div class="font-medium">ไม่อยู่ใน REST มาตรฐาน</div>
+          <div class="text-gray-500 mt-1">{{ about_note }}</div>
+        </div>
+      </div>
+      <div class="mt-6">
+        <a href="/auth/discord/me/" class="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700">ดูข้อมูลดิบ (JSON)</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

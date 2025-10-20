@@ -71,3 +71,52 @@ def discord_me(request):
 def discord_logout(request):
     request.session.pop("discord_user", None)
     return redirect("profile")
+
+
+def _discord_cdn_avatar(user):
+    try:
+        uid = str(user.get("id"))
+    except Exception:
+        return None
+    avatar = user.get("avatar")
+    if avatar:
+        ext = "gif" if str(avatar).startswith("a_") else "png"
+        return f"https://cdn.discordapp.com/avatars/{uid}/{avatar}.{ext}?size=512"
+    # Fallback default avatar (approximation using id % 5)
+    try:
+        idx = int(uid) % 5
+    except Exception:
+        idx = 0
+    return f"https://cdn.discordapp.com/embed/avatars/{idx}.png"
+
+
+def _discord_cdn_banner(user):
+    try:
+        uid = str(user.get("id"))
+    except Exception:
+        return None
+    banner = user.get("banner")
+    if not banner:
+        return None
+    ext = "gif" if str(banner).startswith("a_") else "png"
+    return f"https://cdn.discordapp.com/banners/{uid}/{banner}.{ext}?size=1024"
+
+
+def discord_profile(request):
+    user = request.session.get("discord_user")
+    if not user:
+        return HttpResponseRedirect("/auth/discord/login/")
+
+    context = {
+        "username": user.get("global_name") or user.get("username"),
+        "id": user.get("id"),
+        "avatar_url": _discord_cdn_avatar(user),
+        "banner_url": _discord_cdn_banner(user),
+        # Presence/status and "about me" are not available via public OAuth REST
+        "presence_note": "Discord ไม่เปิดให้ดึงสถานะออนไลน์ผ่าน OAuth REST ต้องใช้ Bot + Gateway (Privileged Intent)",
+        "about_note": "About me (bio) ไม่มีใน REST มาตรฐานผ่าน OAuth",
+        "raw": user,
+    }
+    from django.shortcuts import render
+
+    return render(request, "oauthapp/discord_profile.html", context)
