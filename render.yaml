@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: dogger-web
+    env: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: DEBUG
+        value: "0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ""
+      - key: CSRF_TRUSTED_ORIGINS
+        value: ""
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_REDIRECT_URI
+        value: ""
+      - key: DISCORD_SCOPE
+        value: identify
+      - key: DISCORD_OWNER_ID
+        sync: false
+      - key: DISCORD_OWNER_ABOUT
+        value: ""
+
+  # Optional realtime presence bot. Enable if you want live presence.
+  - type: worker
+    name: dogger-bot
+    env: docker
+    plan: free
+    startCommand: sh -c "pip install -q --no-cache-dir discord.py && python bot/main.py"
+    autoDeploy: false
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: DISCORD_PRESENCE_USER_ID
+        sync: false
+      - key: DISCORD_PRESENCE_FILE
+        value: runtime/presence.json
+      - key: DISCORD_WIDGET_GUILD_ID
+        sync: false
