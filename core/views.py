@@ -22,8 +22,11 @@ def profile(request):
     # Presence via Server Widget (if configured)
     presence_status = None
     widget_guild = os.getenv("DISCORD_WIDGET_GUILD_ID")
-    if widget_guild and display_user and display_user.get("id"):
-        presence_status = _get_presence_via_widget(widget_guild, str(display_user.get("id")))
+    # Prefer presence from bot (gateway) if available
+    if display_user and display_user.get("id"):
+        presence_status = _get_presence_via_bot(str(display_user.get("id")))
+        if not presence_status and widget_guild:
+            presence_status = _get_presence_via_widget(widget_guild, str(display_user.get("id")))
 
     about_me = os.getenv("DISCORD_OWNER_ABOUT")
 
@@ -180,6 +183,19 @@ def _get_presence_via_widget(guild_id, user_id):
         for m in data.get("members", []):
             if str(m.get("id")) == str(user_id):
                 return m.get("status")
+        return None
+    except Exception:
+        return None
+
+
+def _get_presence_via_bot(user_id):
+    """Read presence from shared file written by bot service."""
+    path = os.getenv("DISCORD_PRESENCE_FILE", "runtime/presence.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if str(data.get("user_id")) == str(user_id):
+            return data.get("status")
         return None
     except Exception:
         return None

@@ -24,3 +24,16 @@ services:
     volumes:
       - .:/app
     # Ensure the dev watcher writes compiled CSS to static/css
+  bot:
+    image: doger-web:latest
+    working_dir: /app
+    command: sh -c "pip install -q --no-cache-dir discord.py && python bot/main.py"
+    env_file:
+      - .env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_PRESENCE_USER_ID=${DISCORD_PRESENCE_USER_ID:-${DISCORD_OWNER_ID}}
+      - DISCORD_PRESENCE_FILE=${DISCORD_PRESENCE_FILE:-runtime/presence.json}
+      - DISCORD_WIDGET_GUILD_ID=${DISCORD_WIDGET_GUILD_ID}
+    volumes:
+      - .:/app
