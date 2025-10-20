@@ -64,3 +64,127 @@ docker run -p 8000:8000 --env DEBUG=0 django-tailwind-app
 - Node/Tailwind: ดูที่ `package.json`
 
 หากต้องการความง่ายสุดใน Dev ก็ใช้เฉพาะ `docker-compose.yml` ให้ container tailwind ช่วย watch/build CSS และ container web รัน `runserver` พร้อม hot reload จาก volume ครับ
+
+---
+
+## เริ่มพัฒนาหน้าเว็บแบบทีละขั้น (มือใหม่ Docker + Django)
+
+คำอธิบายสั้น: Docker คือโปรแกรมที่ช่วยรันแอปของเราใน “กล่อง” ที่พร้อมทุกอย่าง โดยโค้ดในโฟลเดอร์นี้ถูกผูกเข้ากับกล่อง ทำให้แก้ไฟล์แล้วเห็นผลทันทีเหมือนรัน Django ปกติ
+
+1) เปิด Docker และสตาร์ทโปรเจ็ค
+
+```
+# เปิด Docker Desktop แล้วรอจนขึ้น Running
+docker compose up --build
+# หรือให้รันเบื้องหลัง
+docker compose up -d --build
+# ดู log ของ Django web
+docker compose logs -f web
+# ดู log ของ Tailwind watcher
+docker compose logs -f tailwind
+```
+
+เปิดเว็บ: http://localhost:8000
+
+2) แก้หน้าเพจที่มีอยู่ (เห็นผลเรียลไทม์)
+
+- หน้าแรก: แก้ไฟล์ `core/templates/core/index.html`
+- หน้า About: แก้ไฟล์ `core/templates/core/about.html`
+- หน้า Contact: แก้ไฟล์ `core/templates/core/contact.html`
+- Layout หลัก: แก้ไฟล์ `templates/base.html`
+- สไตล์ Tailwind: แก้ไฟล์ `assets/css/input.css` (ระบบจะคอมไพล์ไปที่ `static/css/styles.css` อัตโนมัติ)
+
+บันทึกไฟล์ แล้วรีเฟรชหน้าเว็บเพื่อดูผล (ไม่ต้อง rebuild image)
+
+3) เพิ่มหน้าใหม่ทีละขั้น (ตัวอย่างเพจชื่อ "features")
+
+- เพิ่ม view: `core/views.py`
+
+```python
+def features(request):
+    return render(request, "core/features.html")
+```
+
+- ผูก URL: `core/urls.py`
+
+```python
+from .views import features  # เพิ่ม import
+
+urlpatterns = [
+    path("", home, name="home"),
+    path("about/", about, name="about"),
+    path("contact/", contact, name="contact"),
+    path("features/", features, name="features"),  # เส้นทางใหม่
+]
+```
+
+- สร้างเทมเพลต: `core/templates/core/features.html`
+
+```html
+{% extends 'base.html' %}
+{% block title %}Features{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold">Features</h2>
+<p class="mt-2 text-gray-600">รายละเอียดคุณสมบัติของเว็บเพจ</p>
+{% endblock %}
+```
+
+- เพิ่มลิงก์ในเมนู: `templates/base.html`
+
+```html
+<a href="{% url 'features' %}" class="px-2 py-1 rounded hover:bg-gray-100 {% with current=request.resolver_match.url_name %}{% if current == 'features' %}text-indigo-600 font-medium{% endif %}{% endwith %}">Features</a>
+```
+
+บันทึกไฟล์ แล้วเปิด http://localhost:8000/features/
+
+4) ทำงานกับฐานข้อมูล (เวลามี Model ใหม่หรือแก้ไข Model)
+
+```
+docker compose run --rm web python manage.py makemigrations
+docker compose run --rm web python manage.py migrate
+```
+
+สร้างผู้ใช้แอดมิน (ครั้งแรก):
+
+```
+docker compose run --rm web python manage.py createsuperuser
+```
+
+5) เมื่อไหร่ต้อง rebuild image?
+
+- เปลี่ยน dependencies Python (`requirements.txt`) หรือ Node (`package.json`) → ใช้คำสั่ง
+
+```
+docker compose up --build
+```
+
+- แก้ไขไฟล์ Python/HTML/CSS/JS ทั่วไป → ไม่ต้อง build ใหม่ แค่บันทึกไฟล์แล้วรีเฟรชหน้าเว็บ
+
+6) คำสั่งที่ใช้บ่อย
+
+```
+# รันและดู log สด (สองหน้าต่าง)
+docker compose up --build
+docker compose logs -f web
+docker compose logs -f tailwind
+
+# หยุดบริการทั้งหมด
+docker compose down
+
+# สถานะคอนเทนเนอร์
+docker compose ps
+
+# เข้าเชลล์ในคอนเทนเนอร์ web (ถ้าต้องการ)
+docker compose exec web sh
+```
+
+7) แก้ปัญหาที่พบบ่อย
+
+- CSS ไม่อัปเดต: ดู log `tailwind`; ถ้าจำเป็น สั่ง build ด้วย
+
+```
+docker compose exec tailwind sh -lc "npm run build"
+```
+
+- เปิดเว็บไม่ขึ้น: ตรวจสถานะด้วย `docker compose ps` และ log ของ `web`
+- เปลี่ยนค่าตั้งค่า: ดู `config/settings.py` โดยเฉพาะ `DEBUG`, `ALLOWED_HOSTS`
