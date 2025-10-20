@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 import os
+from datetime import datetime, timezone as _tz
 
 
 
@@ -21,10 +22,18 @@ def profile(request):
 
     # Presence via Server Widget (if configured)
     presence_status = None
+    presence_elapsed_th = None
     widget_guild = os.getenv("DISCORD_WIDGET_GUILD_ID")
     # Prefer presence from bot (gateway) if available
     if display_user and display_user.get("id"):
-        presence_status = _get_presence_via_bot(str(display_user.get("id")))
+        info = _get_presence_info_via_bot(str(display_user.get("id")))
+        if info:
+            presence_status = info.get("status")
+            ts = info.get("ts")
+            if presence_status == "offline" and ts:
+                now = datetime.now(_tz.utc)
+                delta = max(0, int((now - ts).total_seconds()))
+                presence_elapsed_th = _format_duration_th(delta)
         if not presence_status and widget_guild:
             presence_status = _get_presence_via_widget(widget_guild, str(display_user.get("id")))
 
@@ -37,6 +46,7 @@ def profile(request):
         "display_avatar_url": display_avatar_url,
         "display_banner_url": display_banner_url,
         "presence_status": presence_status,
+        "presence_elapsed_th": presence_elapsed_th,
         "about_me": about_me,
     }
     return render(request, "profile/home.html", context)
@@ -199,5 +209,47 @@ def _get_presence_via_bot(user_id):
         return None
     except Exception:
         return None
+
+
+def _get_presence_info_via_bot(user_id):
+    """Return dict {status, ts(datetime)} from bot presence file if matches user_id."""
+    path = os.getenv("DISCORD_PRESENCE_FILE", "runtime/presence.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if str(data.get("user_id")) != str(user_id):
+            return None
+        status = data.get("status")
+        ts_raw = data.get("ts")
+        ts = None
+        if ts_raw:
+            try:
+                ts = datetime.fromisoformat(ts_raw)
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=_tz.utc)
+            except Exception:
+                ts = None
+        return {"status": status, "ts": ts}
+    except Exception:
+        return None
+
+
+def _format_duration_th(seconds: int) -> str:
+    """Format seconds into Thai human string like '2 วัน 3 ชั่วโมง', '5 นาที'."""
+    mins = seconds // 60
+    hrs = mins // 60
+    days = hrs // 24
+    mins = mins % 60
+    hrs = hrs % 24
+    parts = []
+    if days > 0:
+        parts.append(f"{days} วัน")
+    if hrs > 0:
+        parts.append(f"{hrs} ชั่วโมง")
+    if days == 0 and mins > 0:
+        parts.append(f"{mins} นาที")
+    if not parts:
+        return "ไม่กี่วินาที"
+    return " ".join(parts)
 
 

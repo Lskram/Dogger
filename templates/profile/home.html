@@ -194,6 +194,11 @@
         </div>
 
         <!-- Bio with typewriter effect feel -->
+        {% if about_me %}
+        <p class="text-purple-100/90 text-base md:text-lg mb-6 font-light tracking-wide leading-relaxed animate-fade-in-up delay-300">
+          {{ about_me }}
+        </p>
+        {% else %}
         <p class="text-purple-100/90 text-base md:text-lg mb-6 font-light tracking-wide transform transition-all duration-500 hover:text-purple-200 hover:scale-105 cursor-default leading-relaxed animate-fade-in-up delay-300">
           <span class="inline-block hover:animate-bounce-gentle">æ—…</span>
           <span class="inline-block hover:animate-bounce-gentle delay-75">è¡Œ</span>
@@ -208,6 +213,7 @@
           <span class="inline-block hover:animate-bounce-gentle delay-800">æˆ‘</span>
           <span class="inline-block hover:animate-bounce-gentle">ã€‚</span>
         </p>
+        {% endif %}
 
         <!-- User Info Badge - Enhanced -->
         <div class="relative group/badge mb-8 animate-fade-in-up delay-500">
@@ -244,7 +250,13 @@
               <span class="text-purple-200/80 text-xs md:text-sm flex items-center gap-1">
                 {% if st %}
                   <span class="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)] {% if st == 'online' %}bg-green-400{% elif st == 'idle' %}bg-amber-400{% elif st == 'dnd' %}bg-rose-500{% else %}bg-gray-400{% endif %}"></span>
-                  {% if st == 'online' %}online now{% else %}{{ st }}{% endif %}
+                  {% if st == 'online' %}
+                    online now
+                  {% elif st == 'offline' %}
+                    offline{% if presence_elapsed_th %} ({{ presence_elapsed_th }}){% endif %}
+                  {% else %}
+                    {{ st }}
+                  {% endif %}
                 {% else %}
                   <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
                   status unknown
