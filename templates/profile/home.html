@@ -1,4 +1,5 @@
-{% extends "templest profile/base.html" %}
+﻿{% extends 'profile/base.html' %}
+
 {% load static %}
 
 {% block title %}Lskram{% endblock %}
@@ -23,11 +24,11 @@
       
       <!-- Message -->
       <h2 class="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 bg-clip-text text-transparent">
-        ยินดีต้อนรับ! 👋
+        à¸¢à¸´à¸™à¸”à¸µà¸•à¹‰à¸­à¸™à¸£à¸±à¸š! ðŸ‘‹
       </h2>
       <p class="text-white/90 text-lg mb-6 leading-relaxed">
-        กรุณา <span class="text-purple-300 font-semibold">แตะหน้าจอ</span> เพื่อเริ่มต้นประสบการณ์<br>
-        <span class="text-sm text-purple-300/80">(เพลงจะเล่นอัตโนมัติ)</span>
+        à¸à¸£à¸¸à¸“à¸² <span class="text-purple-300 font-semibold">à¹à¸•à¸°à¸«à¸™à¹‰à¸²à¸ˆà¸­</span> à¹€à¸žà¸·à¹ˆà¸­à¹€à¸£à¸´à¹ˆà¸¡à¸•à¹‰à¸™à¸›à¸£à¸°à¸ªà¸šà¸à¸²à¸£à¸“à¹Œ<br>
+        <span class="text-sm text-purple-300/80">(à¹€à¸žà¸¥à¸‡à¸ˆà¸°à¹€à¸¥à¹ˆà¸™à¸­à¸±à¸•à¹‚à¸™à¸¡à¸±à¸•à¸´)</span>
       </p>
       
       <!-- Click indicator -->
@@ -158,7 +159,7 @@
                 <div class="revealed-name absolute top-full left-1/2 -translate-x-1/2 mt-4 opacity-0 transition-all duration-500 whitespace-nowrap pointer-events-none">
                   <div class="bg-gradient-to-r from-purple-900/90 via-pink-900/90 to-blue-900/90 backdrop-blur-xl px-6 py-3 rounded-2xl border-2 border-purple-400/50 shadow-[0_0_30px_rgba(168,85,247,0.6)]">
                     <p class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-blue-200 bg-clip-text text-transparent">
-                      ✨ น่ารักจังกดด้วยหรอ ✨
+                      âœ¨ à¸™à¹ˆà¸²à¸£à¸±à¸à¸ˆà¸±à¸‡à¸à¸”à¸”à¹‰à¸§à¸¢à¸«à¸£à¸­ âœ¨
                     </p>
                   </div>
                 </div>
@@ -182,18 +183,18 @@
 
         <!-- Bio with typewriter effect feel -->
         <p class="text-purple-100/90 text-base md:text-lg mb-6 font-light tracking-wide transform transition-all duration-500 hover:text-purple-200 hover:scale-105 cursor-default leading-relaxed animate-fade-in-up delay-300">
-          <span class="inline-block hover:animate-bounce-gentle">旅</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-75">行</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-100">的</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-150">意</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-200">义</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-300">在</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-400">于</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-500">发</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-600">现</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-700">自</span>
-          <span class="inline-block hover:animate-bounce-gentle delay-800">我</span>
-          <span class="inline-block hover:animate-bounce-gentle">。</span>
+          <span class="inline-block hover:animate-bounce-gentle">æ—…</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-75">è¡Œ</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-100">çš„</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-150">æ„</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-200">ä¹‰</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-300">åœ¨</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-400">äºŽ</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-500">å‘</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-600">çŽ°</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-700">è‡ª</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-800">æˆ‘</span>
+          <span class="inline-block hover:animate-bounce-gentle">ã€‚</span>
         </p>
 
         <!-- User Info Badge - Enhanced -->
@@ -468,7 +469,7 @@
   75% { transform: rotate(5deg); }
 }
 
-/* Floating icon animations - ลอยในอวกาศ */
+/* Floating icon animations - à¸¥à¸­à¸¢à¹ƒà¸™à¸­à¸§à¸à¸²à¸¨ */
 @keyframes float-icon-1 {
   0%, 100% { 
     transform: translate(0, 0) rotate(0deg);
@@ -788,3 +789,5 @@ additionalStyle.textContent = `
 document.head.appendChild(additionalStyle);
 </script>
 {% endblock %}
+
+
