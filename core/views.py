@@ -260,3 +260,8 @@ def _format_duration_th(seconds: int) -> str:
     return " ".join(parts)
 
 
+def health(request):
+    from django.http import HttpResponse
+    return HttpResponse("ok")
+
+

@@ -90,3 +90,6 @@ else:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         }
     }
+
+# Optional: CSRF trusted origins for production (comma-separated, full scheme)
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
