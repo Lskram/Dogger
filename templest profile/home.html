@@ -1,0 +1,790 @@
+{% extends "templest profile/base.html" %}
+{% load static %}
+
+{% block title %}Lskram{% endblock %}
+
+{% block content %}
+<!-- Notification Overlay -->
+<div id="clickNotification" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-500">
+  <div class="relative bg-gradient-to-br from-purple-900/90 via-pink-900/90 to-blue-900/90 rounded-3xl p-8 md:p-12 border-2 border-purple-400/50 shadow-2xl shadow-purple-500/50 max-w-md mx-4 animate-float">
+    <!-- Glowing border -->
+    <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl opacity-75 blur-xl animate-pulse-slow"></div>
+    
+    <div class="relative text-center">
+      <!-- Icon -->
+      <div class="mb-6 flex justify-center">
+        <div class="relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-2xl opacity-60 animate-pulse"></div>
+          <svg class="relative w-16 h-16 text-purple-300 animate-bounce-gentle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Message -->
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 bg-clip-text text-transparent">
+        ยินดีต้อนรับ! 👋
+      </h2>
+      <p class="text-white/90 text-lg mb-6 leading-relaxed">
+        กรุณา <span class="text-purple-300 font-semibold">แตะหน้าจอ</span> เพื่อเริ่มต้นประสบการณ์<br>
+        <span class="text-sm text-purple-300/80">(เพลงจะเล่นอัตโนมัติ)</span>
+      </p>
+      
+      <!-- Click indicator -->
+      <div class="flex justify-center gap-2 animate-pulse">
+        <div class="w-3 h-3 bg-purple-400 rounded-full animate-ping"></div>
+        <div class="w-3 h-3 bg-pink-400 rounded-full animate-ping delay-100"></div>
+        <div class="w-3 h-3 bg-blue-400 rounded-full animate-ping delay-200"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<section class="fixed inset-0 flex items-center justify-center px-4 py-8 overflow-hidden">
+  <div class="w-full max-w-xl md:max-w-2xl lg:max-w-3xl h-full max-h-[90vh] flex items-center justify-center">
+    
+    <!-- Floating particles background -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="particle particle-1"></div>
+      <div class="particle particle-2"></div>
+      <div class="particle particle-3"></div>
+      <div class="particle particle-4"></div>
+      <div class="particle particle-5"></div>
+    </div>
+
+    <!-- Profile Card Container -->
+    <div class="relative group/card">
+      <!-- Outer glow ring - animated -->
+      <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl opacity-0 group-hover/card:opacity-100 blur-2xl transition-all duration-1000 animate-gradient-rotate"></div>
+      
+      <!-- Middle glow pulse -->
+      <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-3xl opacity-75 blur-md animate-pulse-slow"></div>
+      
+      <!-- Main Card -->
+      <div class="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-black/95 rounded-3xl p-8 md:p-12 border-2 border-purple-400/30 backdrop-blur-2xl shadow-[0_0_80px_rgba(168,85,247,0.4)] transform transition-all duration-700 hover:shadow-[0_0_120px_rgba(168,85,247,0.6)] hover:scale-[1.03] hover:border-purple-400/60 overflow-hidden">
+        
+        <!-- GIF Background with blur -->
+        <div class="absolute inset-0 rounded-3xl overflow-hidden">
+          <img src="{% static 'images/1018.gif' %}" 
+               class="w-full h-full object-cover opacity-20 blur-sm" 
+               alt="background">
+          <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60"></div>
+        </div>
+        
+        <!-- Content wrapper -->
+        <div class="relative z-10">
+        
+        <!-- Decorative corner elements -->
+        <div class="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-purple-400/30 rounded-tl-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-pink-400/30 rounded-br-3xl"></div>
+        
+        <!-- Floating orbs -->
+        <div class="absolute top-4 right-4 w-12 h-12 bg-purple-500/20 rounded-full blur-xl animate-float"></div>
+        <div class="absolute bottom-4 left-4 w-16 h-16 bg-pink-500/20 rounded-full blur-xl animate-float-delayed"></div>
+        
+        <!-- Avatar & Name Section - SIDE BY SIDE with entrance animation -->
+        <div class="flex items-center justify-center gap-6 md:gap-8 lg:gap-10 mb-4 flex-wrap" id="profileSection">
+          
+          <!-- Avatar -->
+          <div class="relative group/avatar animate-slide-in-left">
+            <!-- Multiple glow layers -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full blur-3xl opacity-0 group-hover/avatar:opacity-100 transition-all duration-700 animate-spin-very-slow"></div>
+            <div class="absolute -inset-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-full blur-2xl opacity-60 group-hover/avatar:opacity-90 transition-all duration-500 animate-pulse"></div>
+            
+            <!-- Avatar container -->
+            <div class="relative">
+              <!-- Outer rotating particles ring -->
+              <div class="absolute -inset-8 animate-spin-slow">
+                <!-- 12 particles around the circle with pulse animation -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.8)] animate-particle-pulse"></div>
+                <div class="absolute top-[6.7%] right-[6.7%] w-3 h-3 bg-pink-400 rounded-full shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-particle-pulse delay-100"></div>
+                <div class="absolute top-1/4 right-0 w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)] animate-particle-pulse delay-200"></div>
+                <div class="absolute top-1/2 right-0 w-3 h-3 bg-purple-400 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.8)] animate-particle-pulse delay-300"></div>
+                <div class="absolute bottom-1/4 right-0 w-3 h-3 bg-pink-400 rounded-full shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-particle-pulse delay-400"></div>
+                <div class="absolute bottom-[6.7%] right-[6.7%] w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)] animate-particle-pulse delay-500"></div>
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.8)] animate-particle-pulse delay-600"></div>
+                <div class="absolute bottom-[6.7%] left-[6.7%] w-3 h-3 bg-pink-400 rounded-full shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-particle-pulse delay-700"></div>
+                <div class="absolute bottom-1/4 left-0 w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)] animate-particle-pulse delay-800"></div>
+                <div class="absolute top-1/2 left-0 w-3 h-3 bg-purple-400 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.8)] animate-particle-pulse"></div>
+                <div class="absolute top-1/4 left-0 w-3 h-3 bg-pink-400 rounded-full shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-particle-pulse delay-100"></div>
+                <div class="absolute top-[6.7%] left-[6.7%] w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)] animate-particle-pulse delay-200"></div>
+              </div>
+              
+              <!-- Middle rotating ring with dashed border -->
+              <div class="absolute -inset-4 rounded-full border-2 border-dashed border-purple-400/60 animate-spin-medium shadow-[0_0_20px_rgba(168,85,247,0.4)]"></div>
+              
+              <!-- Inner rotating ring - opposite direction -->
+              <div class="absolute -inset-2 rounded-full border-2 border-dotted border-pink-400/40 animate-spin-reverse-slow"></div>
+              
+              <img src="{% static 'images/IMG_20251009_220558_758.webp' %}"
+                   class="relative w-32 h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full object-cover ring-4 ring-purple-400/80 shadow-[0_0_60px_rgba(168,85,247,1)] transform transition-all duration-700 hover:scale-110 hover:rotate-[15deg] hover:ring-pink-400 hover:shadow-[0_0_80px_rgba(236,72,153,1)] cursor-pointer z-10"
+                   alt="avatar">
+              
+              <!-- Sparkle overlay -->
+              <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-500 animate-shimmer z-20"></div>
+              
+              <!-- Status indicator -->
+              <div class="absolute bottom-2 right-2 w-5 h-5 bg-green-500 rounded-full border-4 border-zinc-900 shadow-[0_0_20px_rgba(34,197,94,0.8)] animate-pulse z-30"></div>
+            </div>
+          </div>
+
+          <!-- Name Decoration -->
+          <div class="relative group/name-box animate-slide-in-right">
+            <!-- Glowing background -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl opacity-30 group-hover/name-box:opacity-60 blur-2xl transition-all duration-700 animate-pulse-slow"></div>
+            
+            <!-- Name container -->
+            <div class="relative bg-gradient-to-br from-purple-900/40 via-pink-900/40 to-blue-900/40 backdrop-blur-xl rounded-3xl p-6 md:p-8 border-2 border-purple-400/30 shadow-2xl transform transition-all duration-500 hover:scale-105 hover:border-purple-400/60">
+              
+              <!-- Decorative stars -->
+              <div class="absolute -top-2 -left-2 text-purple-400 animate-pulse-fast">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+              </div>
+              <div class="absolute -bottom-2 -right-2 text-pink-400 animate-pulse-fast delay-300">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+              </div>
+              
+              <!-- Name -->
+              <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 bg-clip-text text-transparent animate-gradient-flow bg-[length:200%_auto] cursor-pointer group/title relative overflow-visible" id="mainName">
+                <span class="drop-shadow-[0_0_20px_rgba(168,85,247,1)] block transition-all duration-300 group-hover/title:scale-105">Lskram</span>
+                <!-- Click effect particles container -->
+                <div class="click-particles absolute inset-0 pointer-events-none"></div>
+                <!-- Revealed name on click -->
+                <div class="revealed-name absolute top-full left-1/2 -translate-x-1/2 mt-4 opacity-0 transition-all duration-500 whitespace-nowrap pointer-events-none">
+                  <div class="bg-gradient-to-r from-purple-900/90 via-pink-900/90 to-blue-900/90 backdrop-blur-xl px-6 py-3 rounded-2xl border-2 border-purple-400/50 shadow-[0_0_30px_rgba(168,85,247,0.6)]">
+                    <p class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-blue-200 bg-clip-text text-transparent">
+                      ✨ น่ารักจังกดด้วยหรอ ✨
+                    </p>
+                  </div>
+                </div>
+              </h1>
+              
+              <!-- Subtitle/tagline -->
+              <div class="mt-2 flex items-center gap-2 justify-center">
+                <div class="h-px w-8 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+                <p class="text-purple-200/80 text-xs md:text-sm font-light tracking-widest uppercase">
+                  Click_me Babe!!
+                </p>
+                <div class="h-px w-8 bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
+              </div>
+              
+              <!-- Animated underline -->
+              <div class="mt-3 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)] animate-gradient-flow"></div>
+            </div>
+          </div>
+          
+        </div>
+
+        <!-- Bio with typewriter effect feel -->
+        <p class="text-purple-100/90 text-base md:text-lg mb-6 font-light tracking-wide transform transition-all duration-500 hover:text-purple-200 hover:scale-105 cursor-default leading-relaxed animate-fade-in-up delay-300">
+          <span class="inline-block hover:animate-bounce-gentle">旅</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-75">行</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-100">的</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-150">意</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-200">义</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-300">在</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-400">于</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-500">发</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-600">现</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-700">自</span>
+          <span class="inline-block hover:animate-bounce-gentle delay-800">我</span>
+          <span class="inline-block hover:animate-bounce-gentle">。</span>
+        </p>
+
+        <!-- User Info Badge - Enhanced -->
+        <div class="relative group/badge mb-8 animate-fade-in-up delay-500">
+          <!-- Mega glow -->
+          <div class="absolute -inset-2 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full opacity-40 group-hover/badge:opacity-80 blur-xl transition-all duration-700 animate-pulse-slow"></div>
+          
+          <div class="relative flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-purple-900/60 via-pink-900/60 to-blue-900/60 rounded-full w-fit mx-auto border-2 border-purple-400/50 backdrop-blur-xl transform transition-all duration-500 hover:scale-110 hover:border-purple-300 shadow-[0_0_40px_rgba(168,85,247,0.4)] hover:shadow-[0_0_60px_rgba(168,85,247,0.8)]">
+            
+            <!-- Animated mini avatar -->
+            <div class="relative">
+              <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-spin-slow opacity-70"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-blue-500 rounded-full animate-spin-reverse opacity-50"></div>
+              <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 ring-2 ring-white/60 shadow-xl shadow-purple-500/60 flex items-center justify-center text-white font-bold text-sm">
+                S
+              </div>
+            </div>
+            
+            <div class="flex flex-col items-start">
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm md:text-base tracking-wide">samephng_95007</span>
+                
+                <!-- Super glowing verified badges -->
+                <svg class="w-4 h-4 md:w-5 md:h-5 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,1)] animate-pulse-fast" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                
+                <svg class="w-4 h-4 md:w-5 md:h-5 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,1)] animate-wiggle" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <span class="text-purple-200/80 text-xs md:text-sm flex items-center gap-1">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+                online now
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Icons - FLOATING IN SPACE -->
+        <div class="relative h-36 md:h-44 lg:h-48 mb-6 animate-fade-in-up delay-700">
+          <!-- Spotify - Floating -->
+          <a href="https://open.spotify.com/user/31dxx3g3qrmquijxdi5jwi532hji?si=6c5ff306be4c4afb"
+             target="_blank" rel="noopener noreferrer" 
+             class="absolute left-[10%] top-[20%] group/spotify transition-all duration-700 hover:scale-150 animate-float-icon-1"
+             aria-label="Spotify">
+            <div class="absolute -inset-4 bg-green-500 rounded-full blur-2xl opacity-0 group-hover/spotify:opacity-100 transition-all duration-700 animate-pulse"></div>
+            <div class="absolute -inset-2 bg-green-400 rounded-full blur-xl opacity-0 group-hover/spotify:opacity-80 transition-all duration-500"></div>
+            
+            <div class="relative bg-zinc-900/50 p-2.5 md:p-3 lg:p-4 rounded-2xl border-2 border-green-500/0 group-hover/spotify:border-green-400/80 transition-all duration-500 backdrop-blur-sm shadow-lg group-hover/spotify:shadow-[0_0_40px_rgba(34,197,94,0.6)]">
+              <svg class="relative w-9 h-9 md:w-11 md:h-11 lg:w-12 lg:h-12 fill-white/80 group-hover/spotify:fill-green-400 transition-all duration-500 drop-shadow-[0_0_0px_rgba(34,197,94,0)] group-hover/spotify:drop-shadow-[0_0_20px_rgba(34,197,94,1)] transform group-hover/spotify:rotate-[360deg]" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm4.36 14.68a.75.75 0 0 1-1.03.26c-2.82-1.73-6.38-2.12-10.56-1.16a.75.75 0 1 1-.33-1.46c4.5-1.03 8.41-.6 11.5 1.29.36.22.47.7.22 1.07zm1.39-3.04a.9.9 0 0 1-1.24.31c-3.22-1.95-8.14-2.52-11.96-1.38a.9.9 0 1 1-.52-1.72c4.29-1.29 9.7-.65 13.36 1.54.42.25.56.8.36 1.25zm.13-3.18a1.03 1.03 0 0 1-1.41.35c-3.7-2.2-9.34-2.4-12.72-1.32a1.03 1.03 0 1 1-.62-1.97c3.88-1.22 10.1-1 14.27 1.46.5.3.67.96.38 1.48z"/>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Twitter/X - Floating -->
+          <a href="https://x.com/Comer2002" target="_blank" rel="noopener noreferrer"
+             class="absolute left-[35%] top-[50%] group/twitter transition-all duration-700 hover:scale-150 animate-float-icon-2"
+             aria-label="Twitter">
+            <div class="absolute -inset-4 bg-sky-500 rounded-full blur-2xl opacity-0 group-hover/twitter:opacity-100 transition-all duration-700 animate-pulse"></div>
+            <div class="absolute -inset-2 bg-sky-400 rounded-full blur-xl opacity-0 group-hover/twitter:opacity-80 transition-all duration-500"></div>
+            
+            <div class="relative bg-zinc-900/50 p-2.5 md:p-3 lg:p-4 rounded-2xl border-2 border-sky-500/0 group-hover/twitter:border-sky-400/80 transition-all duration-500 backdrop-blur-sm shadow-lg group-hover/twitter:shadow-[0_0_40px_rgba(14,165,233,0.6)]">
+              <svg class="relative w-9 h-9 md:w-11 md:h-11 lg:w-12 lg:h-12 fill-white/80 group-hover/twitter:fill-sky-400 transition-all duration-500 drop-shadow-[0_0_0px_rgba(14,165,233,0)] group-hover/twitter:drop-shadow-[0_0_20px_rgba(14,165,233,1)] transform group-hover/twitter:rotate-[-360deg]" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Discord - Floating -->
+          <a href="https://discord.com/users/1424391955294720115" target="_blank" rel="noopener noreferrer"
+             class="absolute right-[30%] top-[15%] group/discord transition-all duration-700 hover:scale-150 animate-float-icon-3"
+             aria-label="Discord">
+            <div class="absolute -inset-4 bg-indigo-500 rounded-full blur-2xl opacity-0 group-hover/discord:opacity-100 transition-all duration-700 animate-pulse"></div>
+            <div class="absolute -inset-2 bg-indigo-400 rounded-full blur-xl opacity-0 group-hover/discord:opacity-80 transition-all duration-500"></div>
+            
+            <div class="relative bg-zinc-900/50 p-2.5 md:p-3 lg:p-4 rounded-2xl border-2 border-indigo-500/0 group-hover/discord:border-indigo-400/80 transition-all duration-500 backdrop-blur-sm shadow-lg group-hover/discord:shadow-[0_0_40px_rgba(99,102,241,0.6)]">
+              <svg class="relative w-9 h-9 md:w-11 md:h-11 lg:w-12 lg:h-12 fill-white/80 group-hover/discord:fill-indigo-400 transition-all duration-500 drop-shadow-[0_0_0px_rgba(99,102,241,0)] group-hover/discord:drop-shadow-[0_0_20px_rgba(99,102,241,1)] transform group-hover/discord:rotate-[360deg]" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Instagram - Floating -->
+          <a href="https://www.instagram.com/lsk_2002/" target="_blank" rel="noopener noreferrer"
+             class="absolute right-[5%] top-[45%] group/instagram transition-all duration-700 hover:scale-150 animate-float-icon-4"
+             aria-label="Instagram">
+            <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-full blur-2xl opacity-0 group-hover/instagram:opacity-100 transition-all duration-700 animate-pulse"></div>
+            <div class="absolute -inset-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-full blur-xl opacity-0 group-hover/instagram:opacity-80 transition-all duration-500"></div>
+            
+            <div class="relative bg-zinc-900/50 p-2.5 md:p-3 lg:p-4 rounded-2xl border-2 border-pink-500/0 group-hover/instagram:border-pink-400/80 transition-all duration-500 backdrop-blur-sm shadow-lg group-hover/instagram:shadow-[0_0_40px_rgba(236,72,153,0.6)]">
+              <svg class="relative w-9 h-9 md:w-11 md:h-11 lg:w-12 lg:h-12 fill-white/80 group-hover/instagram:fill-pink-400 transition-all duration-500 drop-shadow-[0_0_0px_rgba(236,72,153,0)] group-hover/instagram:drop-shadow-[0_0_20px_rgba(236,72,153,1)] transform group-hover/instagram:rotate-[-360deg]" viewBox="0 0 24 24">
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5zM12 10.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- View Counter - Simple no box -->
+        <div class="flex items-center justify-center gap-2 text-purple-300/90 text-sm md:text-base group/views transform transition-all duration-300 hover:scale-110 cursor-default animate-fade-in-up delay-1000">
+          <svg class="w-5 h-5 md:w-6 md:h-6 drop-shadow-[0_0_6px_rgba(168,85,247,0.8)] group-hover/views:animate-pulse-fast" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+          </svg>
+          <span class="font-bold drop-shadow-[0_0_4px_rgba(168,85,247,0.6)]">404.04 K</span>
+        </div>
+
+        </div><!-- End content wrapper -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Particle pulse animation */
+@keyframes particle-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.5);
+    opacity: 0.6;
+  }
+}
+
+.animate-particle-pulse {
+  animation: particle-pulse 2s ease-in-out infinite;
+}
+
+/* Entrance animations */
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-200%) rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(200%) rotate(180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 1s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 1s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Delay for entrance animations */
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* Gradient animations */
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes gradient-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse variations */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-fast {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Floating animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(-20px) translateX(10px); }
+  66% { transform: translateY(-10px) translateX(-10px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(15px) translateX(-12px); }
+  66% { transform: translateY(8px) translateX(12px); }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Spin variations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-medium {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse-slow {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes spin-very-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.animate-spin-medium {
+  animation: spin-medium 6s linear infinite;
+}
+
+.animate-spin-reverse-slow {
+  animation: spin-reverse-slow 10s linear infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Wiggle */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* Floating icon animations - ลอยในอวกาศ */
+@keyframes float-icon-1 {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% { 
+    transform: translate(15px, -20px) rotate(5deg);
+  }
+  50% { 
+    transform: translate(-10px, -35px) rotate(-3deg);
+  }
+  75% { 
+    transform: translate(-20px, -15px) rotate(8deg);
+  }
+}
+
+@keyframes float-icon-2 {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% { 
+    transform: translate(-18px, 25px) rotate(-8deg);
+  }
+  50% { 
+    transform: translate(12px, 40px) rotate(5deg);
+  }
+  75% { 
+    transform: translate(22px, 18px) rotate(-10deg);
+  }
+}
+
+@keyframes float-icon-3 {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% { 
+    transform: translate(20px, 30px) rotate(12deg);
+  }
+  50% { 
+    transform: translate(-15px, 45px) rotate(-6deg);
+  }
+  75% { 
+    transform: translate(-25px, 20px) rotate(9deg);
+  }
+}
+
+@keyframes float-icon-4 {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% { 
+    transform: translate(-22px, -15px) rotate(-10deg);
+  }
+  50% { 
+    transform: translate(18px, -30px) rotate(7deg);
+  }
+  75% { 
+    transform: translate(10px, -10px) rotate(-5deg);
+  }
+}
+
+.animate-float-icon-1 {
+  animation: float-icon-1 8s ease-in-out infinite;
+}
+
+.animate-float-icon-2 {
+  animation: float-icon-2 7s ease-in-out infinite 0.5s;
+}
+
+.animate-float-icon-3 {
+  animation: float-icon-3 9s ease-in-out infinite 1s;
+}
+
+.animate-float-icon-4 {
+  animation: float-icon-4 7.5s ease-in-out infinite 1.5s;
+}
+
+/* Particles */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.8), transparent);
+  border-radius: 50%;
+  animation: float 6s infinite ease-in-out;
+}
+
+.particle-1 { top: 10%; left: 20%; animation-duration: 8s; }
+.particle-2 { top: 60%; left: 80%; animation-duration: 10s; animation-delay: 2s; }
+.particle-3 { top: 30%; left: 70%; animation-duration: 12s; animation-delay: 1s; }
+.particle-4 { top: 80%; left: 30%; animation-duration: 9s; animation-delay: 3s; }
+.particle-5 { top: 50%; left: 10%; animation-duration: 11s; animation-delay: 1.5s; }
+
+/* Utility delays */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* Hide animations initially until notification is dismissed */
+#profileSection.before-start .animate-slide-in-left,
+#profileSection.before-start .animate-slide-in-right,
+#profileSection.before-start .animate-fade-in-up {
+  opacity: 0;
+  animation: none;
+}
+
+/* Name revealed effect */
+.revealed-name.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(10px);
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateX(-50%) translateY(10px); }
+  50% { transform: translateX(-50%) translateY(0px); }
+}
+
+/* Name click effect */
+@keyframes name-explode {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes particle-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+.name-explode {
+  animation: name-explode 0.5s ease-out;
+}
+
+.click-particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particle-burst 1.5s ease-out forwards;
+}
+</style>
+
+<script>
+// Handle notification dismissal and start animations
+document.addEventListener('DOMContentLoaded', function() {
+  const notification = document.getElementById('clickNotification');
+  const profileSection = document.getElementById('profileSection');
+  const mainName = document.getElementById('mainName');
+  
+  // Add class to prevent animations from starting
+  profileSection.classList.add('before-start');
+  
+  function startAnimations() {
+    notification.style.opacity = '0';
+    setTimeout(() => {
+      notification.style.display = 'none';
+      // Remove the class to trigger animations
+      profileSection.classList.remove('before-start');
+    }, 500);
+  }
+  
+  // Close notification on any click or touch
+  notification.addEventListener('click', startAnimations);
+  
+  // Also close on any key press
+  document.addEventListener('keydown', function() {
+    if (notification.style.display !== 'none') {
+      startAnimations();
+    }
+  }, { once: true });
+
+  // Name click effect
+  let nameRevealed = false;
+  mainName.addEventListener('click', function(e) {
+    // Toggle revealed name
+    const revealedName = mainName.querySelector('.revealed-name');
+    nameRevealed = !nameRevealed;
+    
+    if (nameRevealed) {
+      revealedName.classList.add('show');
+    } else {
+      revealedName.classList.remove('show');
+    }
+    
+    // Add explosion animation
+    mainName.classList.add('name-explode');
+    setTimeout(() => mainName.classList.remove('name-explode'), 500);
+    
+    // Create particle burst
+    const container = mainName.querySelector('.click-particles');
+    const rect = mainName.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const colors = ['#a855f7', '#ec4899', '#3b82f6', '#8b5cf6', '#d946ef'];
+    
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'click-particle';
+      
+      const angle = (Math.PI * 2 * i) / 30;
+      const velocity = 100 + Math.random() * 150;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity;
+      
+      particle.style.left = centerX + 'px';
+      particle.style.top = centerY + 'px';
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.boxShadow = `0 0 15px ${colors[Math.floor(Math.random() * colors.length)]}`;
+      particle.style.setProperty('--tx', tx + 'px');
+      particle.style.setProperty('--ty', ty + 'px');
+      
+      container.appendChild(particle);
+      
+      setTimeout(() => particle.remove(), 1500);
+    }
+    
+    // Screen flash effect
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(168,85,247,0.5), transparent 60%);
+      pointer-events: none;
+      z-index: 9999;
+      animation: flash-fade 0.8s ease-out forwards;
+    `;
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 800);
+  });
+
+  // Add click effects to all clickable elements
+  const clickableElements = document.querySelectorAll('.cursor-pointer, button, a');
+  
+  clickableElements.forEach(element => {
+    element.addEventListener('click', function(e) {
+      // Prevent default ripple for links (don't interfere with navigation)
+      if (this.tagName === 'A') {
+        e.stopPropagation();
+      }
+      
+      // Create circular ripple at click position
+      const ripple = document.createElement('div');
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      ripple.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.8), rgba(168, 85, 247, 0.3) 60%, transparent 80%);
+        transform: translate(-50%, -50%);
+        animation: ripple-expand 0.8s ease-out forwards;
+        pointer-events: none;
+        z-index: 1000;
+      `;
+      
+      const parent = this.querySelector('div') || this;
+      if (parent.style.position !== 'absolute' && parent.style.position !== 'relative' && parent.style.position !== 'fixed') {
+        parent.style.position = 'relative';
+      }
+      
+      parent.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 800);
+      
+      // Add scale effect
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+    });
+  });
+});
+
+// Add additional animations via CSS
+const additionalStyle = document.createElement('style');
+additionalStyle.textContent = `
+  @keyframes flash-fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @keyframes ripple-expand {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
+`;
+document.head.appendChild(additionalStyle);
+</script>
+{% endblock %}
