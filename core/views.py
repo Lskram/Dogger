@@ -99,7 +99,6 @@ def _get_owner_profile():
     """
     from django.utils import timezone
     import datetime as _dt
-    import requests
     from oauthapp.models import OwnerToken
 
     owner_id = os.getenv("DISCORD_OWNER_ID")
@@ -122,6 +121,7 @@ def _get_owner_profile():
             "refresh_token": tok.refresh_token,
         }
         try:
+            import requests  # local import; may be missing during dev
             res = requests.post("https://discord.com/api/oauth2/token", data=data, timeout=10)
             res.raise_for_status()
             tj = res.json()
@@ -138,6 +138,7 @@ def _get_owner_profile():
 
     # Fetch profile
     try:
+        import requests  # local import; may be missing during dev
         me = requests.get(
             "https://discord.com/api/users/@me",
             headers={"Authorization": f"Bearer {access_token}"},
@@ -235,7 +236,7 @@ def _get_presence_info_via_bot(user_id):
 
 
 def _format_duration_th(seconds: int) -> str:
-    """Format seconds into Thai human string like '2 วัน 3 ชั่วโมง', '5 นาที'."""
+    """Format seconds into English: '2 days 3 hours', '5 minutes'."""
     mins = seconds // 60
     hrs = mins // 60
     days = hrs // 24
@@ -243,13 +244,13 @@ def _format_duration_th(seconds: int) -> str:
     hrs = hrs % 24
     parts = []
     if days > 0:
-        parts.append(f"{days} วัน")
+        parts.append(f"{days} day{'s' if days != 1 else ''}")
     if hrs > 0:
-        parts.append(f"{hrs} ชั่วโมง")
+        parts.append(f"{hrs} hour{'s' if hrs != 1 else ''}")
     if days == 0 and mins > 0:
-        parts.append(f"{mins} นาที")
+        parts.append(f"{mins} minute{'s' if mins != 1 else ''}")
     if not parts:
-        return "ไม่กี่วินาที"
+        return "a few seconds"
     return " ".join(parts)
 
 
