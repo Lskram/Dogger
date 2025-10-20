@@ -36,7 +36,7 @@
           <img src="{{ display_avatar_url }}" class="h-8 w-8 rounded-full" alt="avatar" />
         {% endif %}
         <div class="flex items-center gap-2">
-          <span class="text-sm font-medium">{{ display_user.global_name|default:display_user.username }}</span>
+          <span class="text-sm font-medium">{{ display_name }}</span>
           {% if presence_status %}
             {% with c='bg-gray-400' %}
               {% if presence_status == 'online' %}{% with c='bg-emerald-500' %}{% endwith %}{% endif %}

@@ -19,6 +19,11 @@ def profile(request):
 
     display_avatar_url = _build_avatar_url(display_user) if display_user else None
     display_banner_url = _build_banner_url(display_user) if display_user else None
+    # Precompute display name (avoid complex template filters showing literally)
+    if display_user:
+        display_name = display_user.get("global_name") or display_user.get("username") or "Your Name"
+    else:
+        display_name = "Your Name"
 
     # Presence via Server Widget (if configured)
     presence_status = None
@@ -45,6 +50,7 @@ def profile(request):
         "display_user": display_user,
         "display_avatar_url": display_avatar_url,
         "display_banner_url": display_banner_url,
+        "display_name": display_name,
         "presence_status": presence_status,
         "presence_elapsed_th": presence_elapsed_th,
         "about_me": about_me,

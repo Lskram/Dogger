@@ -66,6 +66,25 @@ docker run -p 8000:8000 --env DEBUG=0 django-tailwind-app
 
 ---
 
+## Deploy (GHCR + Docker)
+
+โปรเจ็คนี้มี GitHub Actions สำหรับ build และ push อิมเมจขึ้น GHCR อัตโนมัติเมื่อ push ไปยัง `main` อยู่ที่ `.github/workflows/docker-ghcr.yml`
+
+ขั้นตอน:
+- Push โค้ดขึ้น `main` แล้วดูสถานะที่ GitHub Actions
+- ดึงอิมเมจไปเปิดที่เครื่อง/เซิร์ฟเวอร์สาธารณะได้ด้วย:
+
+```
+docker login ghcr.io -u <github_user> -p <github_token>
+docker pull ghcr.io/<owner>/<repo>:latest
+docker run -p 8000:8000 --env-file .env ghcr.io/<owner>/<repo>:latest
+```
+
+ตั้งค่า `.env` ให้ครบก่อน (ดู `.env.example`) เพื่อให้หน้าโปรไฟล์/สถานะใช้งานได้จริง
+
+
+---
+
 ## เริ่มพัฒนาหน้าเว็บแบบทีละขั้น (มือใหม่ Docker + Django)
 
 คำอธิบายสั้น: Docker คือโปรแกรมที่ช่วยรันแอปของเราใน “กล่อง” ที่พร้อมทุกอย่าง โดยโค้ดในโฟลเดอร์นี้ถูกผูกเข้ากับกล่อง ทำให้แก้ไฟล์แล้วเห็นผลทันทีเหมือนรัน Django ปกติ
