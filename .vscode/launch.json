@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/launch.json",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Open in Edge (Docker up)",
+      "type": "pwa-msedge",
+      "request": "launch",
+      "url": "http://localhost:8000",
+      "preLaunchTask": "Docker: Up (dev)"
+    },
+    {
+      "name": "Open in Chrome (Docker up)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:8000",
+      "preLaunchTask": "Docker: Up (dev)"
+    }
+  ]
+}
+

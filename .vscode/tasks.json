@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json.schemastore.org/tasks.json",
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker: Up (dev)",
+      "type": "shell",
+      "command": "docker compose up --build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Down",
+      "type": "shell",
+      "command": "docker compose down",
+      "problemMatcher": []
+    },
+    {
+      "label": "Django: Migrate",
+      "type": "shell",
+      "command": "docker compose run --rm web python manage.py migrate",
+      "problemMatcher": []
+    },
+    {
+      "label": "Django: Create Superuser",
+      "type": "shell",
+      "command": "docker compose run --rm web python manage.py createsuperuser",
+      "problemMatcher": []
+    },
+    {
+      "label": "Logs: Web",
+      "type": "shell",
+      "command": "docker compose logs -f web",
+      "problemMatcher": []
+    },
+    {
+      "label": "Logs: Tailwind",
+      "type": "shell",
+      "command": "docker compose logs -f tailwind",
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Browser",
+      "type": "shell",
+      "windows": {
+        "command": "start http://localhost:8000"
+      },
+      "linux": {
+        "command": "xdg-open http://localhost:8000"
+      },
+      "osx": {
+        "command": "open http://localhost:8000"
+      },
+      "command": "start http://localhost:8000"
+    }
+  ]
+}
+
