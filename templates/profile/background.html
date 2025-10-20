@@ -30,18 +30,34 @@
   <!-- Video temporarily disabled; using static overlay only to avoid 404 when file missing -->
   <div class="fixed inset-0 bg-black/65 no-pointer"></div>
   <div class="fixed top-4 right-4 z-50">
-    {% with user_ctx=session_user|default:owner_user %}
-      {% if user_ctx %}
-        <div class="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-2 backdrop-blur ring-1 ring-white/20">
-          <span class="text-sm">Hello, {{ user_ctx.global_name|default:user_ctx.username }}</span>
-          {% if session_user %}
-            <a href="{% url 'discord_logout' %}" class="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-700">Logout</a>
+    {% if display_user %}
+      <div class="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-2 backdrop-blur ring-1 ring-white/20">
+        {% if display_avatar_url %}
+          <img src="{{ display_avatar_url }}" class="h-8 w-8 rounded-full" alt="avatar" />
+        {% endif %}
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium">{{ display_user.global_name|default:display_user.username }}</span>
+          {% if presence_status %}
+            {% with c='bg-gray-400' %}
+              {% if presence_status == 'online' %}{% with c='bg-emerald-500' %}{% endwith %}{% endif %}
+              {% if presence_status == 'idle' %}{% with c='bg-amber-400' %}{% endwith %}{% endif %}
+              {% if presence_status == 'dnd' %}{% with c='bg-rose-500' %}{% endwith %}{% endif %}
+              <span title="{{ presence_status }}" class="inline-block h-2.5 w-2.5 rounded-full {{ c }}"></span>
+            {% endwith %}
           {% endif %}
         </div>
-      {% else %}
-        <a href="{% url 'discord_login' %}" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700">Login with Discord</a>
+        {% if session_user %}
+          <a href="{% url 'discord_logout' %}" class="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-700">Logout</a>
+        {% endif %}
+      </div>
+      {% if about_me %}
+        <div class="mt-2 rounded-xl bg-white/10 px-4 py-2 text-xs text-white/90 backdrop-blur ring-1 ring-white/20 max-w-sm">
+          {{ about_me }}
+        </div>
       {% endif %}
-    {% endwith %}
+    {% else %}
+      <a href="{% url 'discord_login' %}" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700">Login with Discord</a>
+    {% endif %}
   </div>
 
   <!-- หิมะโปรย -->

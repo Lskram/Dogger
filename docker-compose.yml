@@ -14,6 +14,9 @@ services:
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_REDIRECT_URI=${DISCORD_REDIRECT_URI:-http://localhost:8000/auth/discord/callback/}
       - DISCORD_SCOPE=${DISCORD_SCOPE:-identify}
+      - DISCORD_OWNER_ID=${DISCORD_OWNER_ID}
+      - DISCORD_WIDGET_GUILD_ID=${DISCORD_WIDGET_GUILD_ID}
+      - DISCORD_OWNER_ABOUT=${DISCORD_OWNER_ABOUT}
   tailwind:
     image: node:20-alpine
     working_dir: /app

@@ -7,39 +7,34 @@ import os
 
 
 def profile(request):
-    # Prefer logged-in Discord user; otherwise, try owner profile from stored token
+    # Prefer logged-in Discord user; otherwise, use stored owner profile
     session_user = request.session.get("discord_user")
-
     owner_user = None
-    owner_avatar_url = None
-    owner_banner_url = None
 
-    if not session_user:
+    display_user = session_user
+    if not display_user:
         owner_user = _get_owner_profile()
-        if owner_user:
-            # Build CDN URLs
-            avatar_hash = owner_user.get("avatar")
-            uid = str(owner_user.get("id")) if owner_user.get("id") else None
-            if uid and avatar_hash:
-                ext = "gif" if str(avatar_hash).startswith("a_") else "png"
-                owner_avatar_url = f"https://cdn.discordapp.com/avatars/{uid}/{avatar_hash}.{ext}?size=512"
-            else:
-                try:
-                    idx = int(uid) % 5 if uid else 0
-                except Exception:
-                    idx = 0
-                owner_avatar_url = f"https://cdn.discordapp.com/embed/avatars/{idx}.png"
+        display_user = owner_user
 
-            banner_hash = owner_user.get("banner")
-            if uid and banner_hash:
-                ext = "gif" if str(banner_hash).startswith("a_") else "png"
-                owner_banner_url = f"https://cdn.discordapp.com/banners/{uid}/{banner_hash}.{ext}?size=1024"
+    display_avatar_url = _build_avatar_url(display_user) if display_user else None
+    display_banner_url = _build_banner_url(display_user) if display_user else None
+
+    # Presence via Server Widget (if configured)
+    presence_status = None
+    widget_guild = os.getenv("DISCORD_WIDGET_GUILD_ID")
+    if widget_guild and display_user and display_user.get("id"):
+        presence_status = _get_presence_via_widget(widget_guild, str(display_user.get("id")))
+
+    about_me = os.getenv("DISCORD_OWNER_ABOUT")
 
     context = {
-        "owner_user": owner_user,
-        "owner_avatar_url": owner_avatar_url,
-        "owner_banner_url": owner_banner_url,
         "session_user": session_user,
+        "owner_user": owner_user,
+        "display_user": display_user,
+        "display_avatar_url": display_avatar_url,
+        "display_banner_url": display_banner_url,
+        "presence_status": presence_status,
+        "about_me": about_me,
     }
     return render(request, "profile/home.html", context)
 
@@ -143,5 +138,50 @@ def _get_owner_profile():
     except Exception:
         # Fallback to cached
         return tok.profile_json or None
+
+
+def _build_avatar_url(user):
+    if not user:
+        return None
+    uid = str(user.get("id")) if user.get("id") else None
+    avatar = user.get("avatar")
+    if uid and avatar:
+        ext = "gif" if str(avatar).startswith("a_") else "png"
+        return f"https://cdn.discordapp.com/avatars/{uid}/{avatar}.{ext}?size=512"
+    try:
+        idx = int(uid) % 5 if uid else 0
+    except Exception:
+        idx = 0
+    return f"https://cdn.discordapp.com/embed/avatars/{idx}.png"
+
+
+def _build_banner_url(user):
+    if not user:
+        return None
+    uid = str(user.get("id")) if user.get("id") else None
+    banner = user.get("banner")
+    if uid and banner:
+        ext = "gif" if str(banner).startswith("a_") else "png"
+        return f"https://cdn.discordapp.com/banners/{uid}/{banner}.{ext}?size=1024"
+    return None
+
+
+def _get_presence_via_widget(guild_id, user_id):
+    """Fetch presence via Discord Server Widget JSON. Requires widget enabled in server settings.
+    Returns one of: online, idle, dnd, offline (or None if not found).
+    """
+    import requests
+    try:
+        url = f"https://discord.com/api/guilds/{guild_id}/widget.json"
+        r = requests.get(url, timeout=8)
+        if r.status_code != 200:
+            return None
+        data = r.json()
+        for m in data.get("members", []):
+            if str(m.get("id")) == str(user_id):
+                return m.get("status")
+        return None
+    except Exception:
+        return None
 
 
